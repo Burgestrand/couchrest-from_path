@@ -48,7 +48,7 @@ describe CouchRest::Document do
     context "given a block" do
       it "should allow us to modify file contents" do
         doc = CouchRest::Document.from_path('./db/design') do |path, contents|
-          [path, 'LAWL']
+          contents.replace 'LAWL'
         end
         
         doc['_id'].should == 'LAWL'
@@ -57,7 +57,7 @@ describe CouchRest::Document do
       
       it "should allow us to modify filename" do
         doc = CouchRest::Document.from_path('./db/design') do |path, contents|
-          [path.sub(/.js\z/, ''), contents]
+          path.sub!(/.js\z/, '')
         end
         
         doc['views']['all']['map.js'].should be_nil

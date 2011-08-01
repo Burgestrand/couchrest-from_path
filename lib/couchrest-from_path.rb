@@ -20,14 +20,13 @@ module CouchRest
       
       find_files(path).each do |file|
         path = Pathname.new(file).relative_path_from(root).cleanpath
-        name = path.basename.to_path
+        name = File.basename(path)
         
         path.each_filename.inject(doc) do |memo, entry|
           if entry == name
             contents = File.read(file)
-            entry, contents = yield path, contents if block_given?
-            entry = entry.basename.to_path if entry.is_a? Pathname
-            memo[entry] = contents
+            yield entry, contents if block_given?
+            memo[File.basename(entry)] = contents
           end
           
           memo[entry] ||= {}
